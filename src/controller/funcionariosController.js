@@ -1,112 +1,62 @@
-const funcionarios= require ("../model/funcionarios.json");
-const fs = require("fs");
+const funcionarios= require ("../model/funcionarios");
 
 const getAll = (req,res) => {
     console.log (req.url);
-    res.status (200).send (funcionarios);
-};
+    funcionarios.find(function(err, funcionarios){
+      if(err) { 
+        res.status(500).send({ message: err.message })
+      }
+      res.status(200).send(funcionarios);
+    })
+  };
 
-const getByID = (req,res) => {
-  const id = req.params.id
-
-  const funcionariosFiltrado= funcionarios.find ((funcionarios) => funcionarios.id == id)
-
-  res.status(200).send(funcionariosFiltrado)
+  const getByCpf = (req, res) => {
+    const cpf = req.params.cpf;
+      funcionarios.findOne({cpf},function(err,funcionarios){
+          res.status(200).send(funcionarios);
+      })
 };
 
 const postFuncionarios = (req,res)=>{
     console.log(req.body);
-    const {id, nome, idade, cpf,rg,data_nasc,sexo,signo,mae,pai,email,senha,cep,endereco,numero,bairro,cidade,estado,telefone_fixo,celular,altura,peso,tipo_sanguineo,cor} = req.body;
-    funcionarios.push ({id, nome, idade, cpf,rg,data_nasc,sexo,signo,mae,pai,email,senha,cep,endereco,numero,bairro,cidade,estado,telefone_fixo,celular,altura,peso,tipo_sanguineo,cor});
-    
-    fs.writeFile("./src/model/funcionarios.json",JSON.stringify(funcionarios),'utf8',function(err){
-      if (err){
-        return res.status(424).send ({message: err});
-      }
-      console.log ("Arquivo atualizado com Sucesso!");
-    });
 
-    res.status(200).send(funcionarios);
-    
-  };
+    let funcionario = new funcionarios(req.body)
+
+  funcionario.save(function(err){
+    if(err) { 
+      res.status(500).send({ message: err.message })
+    }
+    res.status(201).send("O funcionario foi incluído com sucesso")
+  })
+  
+};
 
   const deleteFuncionario = (req,res)=>{
-    const id = req.params.id;
-    try {
-      const funcionariosFiltrado = funcionarios.find((funcionarios) => funcionarios.id ==id);
-    const index = funcionarios.indexOf(funcionariosFiltrado);
-  
-    funcionarios.splice(index,11);
-  
-    fs.writeFile("./src/model/funcionarios.json", JSON.stringify(funcionarios),'utf8',function(err){
-      if (err){
-        return res.status(424).send ({message: 'Registro não encontrado'});
-      }
-      console.log ("Arquivo atualizado com Sucesso!");
-    });
-  
-    res.status(200).send(funcionarios);
-    } catch(err) {
-      return res.status(500).send({message: err})
-    }
-  };
+    const id = req.params.id
+    funcionarios.deleteMany({ id }, function(err){
+        if (err) {
+            res.status(500).send({ message: err.message })
+        } else {
+            res.status(200).send({ message : "funcionario removido com sucesso"})
+        }
+    })
+  }
 
   const putFuncionarios = (req,res) => {
-    try{
-      const id = req.params.id;
-      const funcionariosASerModificado = funcionarios.find((funcionarios) => funcionarios.id == id);
-  
-      const funcionariosAtualizado = req.body;
-  
-      const index = funcionarios.indexOf(funcionariosASerModificado);
-  
-      funcionarios.splice(index,1,funcionariosAtualizado);
-  
-      fs.writeFile("./src/model/funcionarios.json", JSON.stringify(funcionarios),'utf8',function(err){
-        if (err){
-          return res.status(424).send ({message: err});
+    const id = req.params.id
+    funcionarios.updateMany({ id }, { $set : req.body }, { upsert : true }, function(err){
+        if (err) {
+            res.status(500).send({ message: err.message })
+        } else {
+            res.status(200).send({ message : "funcionarios atualizado com sucesso"})
         }
-        console.log ("Arquivo atualizado com Sucesso!");
-      });
-  
-      res.status(200).send(funcionarios);
-    }catch(err){
-    return res.status(424).send({message:err});
-  }
+    })
 }
-
-
-  const patchFuncionarios = (req,res) => {
-    const id = req.params.id;
-    const atualizacao = req.body;
-
-    try {
-      const funcionariosASerModificado= funcionarios.find((funcionarios)=> funcionarios.id == id);
-
-      Object.keys(atualizacao).forEach((chave)=> {
-        funcionariosASerModificado[chave] = atualizacao[chave]
-      })
-      console.log(funcionariosASerModificado)
-
-      fs.writeFile("./src/model/funcionarios.json", JSON.stringify(funcionarios),'utf8',function(err){
-        if (err){
-          return res.status(424).send ({message: err});
-        }
-        console.log ("Arquivo atualizado com Sucesso!");
-      });
-
-     return res.status(200).send(funcionarios);
-
-    } catch(err){
-      return res.status(424).send({message: err});
-    }
-  }
 
 module.exports = {
     getAll,
-    getByID,
+    getByCpf,
     postFuncionarios,
     deleteFuncionario,
-    putFuncionarios,
-    patchFuncionarios
+    putFuncionarios
 };

@@ -1,10 +1,28 @@
 const express = require ("express");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+
 const app = express();
+
+//String de conexão
+mongoose.connect("mongodb://localhost:27017/Livraria", { 
+  useNewUrlParser: true, 
+  useUnifiedTopology: true 
+});
+
+//Conexão com o mongo
+let db = mongoose.connection;
+
+// Captura de erro ou sucesso na conexão
+db.on("error", console.log.bind(console, "iiiiii, deu ruim:"))
+db.once("open", function (){
+  console.log("Deu Certo!! Massa!!!!!")
+})
 
 const index = require ("./routes/index")
 const funcionarios = require ('./routes/funcionariosRouter');
 const livros = require ("./routes/livrosRouter");
-const bodyParser = require("body-parser");
+
 
 app.use(bodyParser.json());
 //app.use(express.json()); Pode usar a do proprio express
