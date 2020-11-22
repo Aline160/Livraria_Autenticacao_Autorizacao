@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const app = express();
 
 //String de conexão
-mongoose.connect("mongodb://localhost:27017/Livraria", { 
+mongoose.connect("mongodb+srv://Aline:Solidariedade1@cluster0.4g3c5.mongodb.net/Livraria?retryWrites=true&w=majority", { 
   useNewUrlParser: true, 
   useUnifiedTopology: true 
 });
