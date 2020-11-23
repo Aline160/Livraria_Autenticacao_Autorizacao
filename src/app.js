@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const app = express();
 
 //String de conexão
-mongoose.connect("mongodb+srv://***:***@cluster0.4g3c5.mongodb.net/Livraria?retryWrites=true&w=majority", { 
+mongoose.connect(process.env.STRING_DE_CONEXAO, { 
   useNewUrlParser: true, 
   useUnifiedTopology: true 
 });
