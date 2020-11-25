@@ -10,7 +10,7 @@ const app = express();
 //mongoose.connect(process.env.STRING_DE_CONEXAO, {
 //mongoose.connect("mongodb://localhost:27017/Livraria", {
 mongoose.connect(process.env.MONGODB_URL,{
-//mongoose.connect("mongodb+srv://Aline:Solidariedade1@cluster0.4g3c5.mongodb.net/Livraria?retryWrites=true&w=majority",{
+//mongoose.connect(",{
   useNewUrlParser: true, 
   useUnifiedTopology: true 
 });
