@@ -1,3 +1,5 @@
+const dotenvSafe= require('dotenv-safe').config();
+
 const express = require ("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
@@ -5,7 +7,10 @@ const bodyParser = require("body-parser");
 const app = express();
 
 //String de conexão
-mongoose.connect(process.env.STRING_DE_CONEXAO, { 
+//mongoose.connect(process.env.STRING_DE_CONEXAO, {
+//mongoose.connect("mongodb://localhost:27017/Livraria", {
+mongoose.connect(process.env.MONGODB_URL,{
+//mongoose.connect("mongodb+srv://Aline:Solidariedade1@cluster0.4g3c5.mongodb.net/Livraria?retryWrites=true&w=majority",{
   useNewUrlParser: true, 
   useUnifiedTopology: true 
 });

@@ -5,6 +5,7 @@ const funcionariosSchema = new mongoose.Schema({
     id:{type:Number},
     nome : { type : String},
     email: { type: String },
+    senha: {type:String},
     cpf: { type: Number },
     dataNascimento: { type: String },
     estadoCivil: { type: String },
